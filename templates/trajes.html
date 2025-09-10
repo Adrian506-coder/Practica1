@@ -21,7 +21,13 @@
                 <th></th>
             </tr>
         </thead>
-        
+        <tbody >
+            <tr ng-repeat="traje in trajes">
+                <td>{{traje.IdTraje}}</td>
+                <td>{{traje.nombreTraje}}</td>
+                <td>{{traje.descripcion}}</td>
+            </tr>
+        </tbody>
     </table>
 </div>
 
