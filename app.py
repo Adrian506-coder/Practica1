@@ -91,7 +91,7 @@ def buscarTrajes():
 
     LIMIT 10 OFFSET 0
     """
-    val    = (busqueda, busqueda, busqueda)
+    val    = (busqueda, busqueda)
 
     try:
         cursor.execute(sql, val)
@@ -150,6 +150,7 @@ def guardarTraje():
 
 #if __name__ == "__main__":
 #    app.run(debug=True)
+
 
 
 
