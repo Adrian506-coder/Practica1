@@ -36,7 +36,7 @@ def pusherProductos():
       ssl=True
     )
     
-    pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
+    pusher_client.trigger("canalTrajes", "eventoTrajes", {"message": "Hola Mundo!"})
     return make_response(jsonify({}))
 
 # -----------------------------
@@ -118,3 +118,4 @@ def listarTrajes():
 # -----------------------------
 if __name__ == "__main__":
     app.run(debug=True)
+
