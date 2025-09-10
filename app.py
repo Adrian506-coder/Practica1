@@ -140,7 +140,7 @@ def guardarTraje():
     con.commit()
     con.close()
 
-    pusherProductos():
+    pusherProductos()
 
     return make_response(jsonify({"mensaje": "Traje guardado correctamente"}))
 
@@ -169,6 +169,7 @@ def eliminartraje():
 
 ##if __name__ == "__main__":
 ##    app.run(port=5001, debug=True)
+
 
 
 
