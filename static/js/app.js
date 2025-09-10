@@ -88,6 +88,7 @@ app.controller("trajesCtrl", function ($scope, $http) {
         });
     }
 
+    $scope.trajes = [];
     listarTrajes()
     
     // Enable pusher logging - don't include this in production
@@ -185,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
