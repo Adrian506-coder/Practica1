@@ -117,10 +117,10 @@ app.controller("trajesCtrl", function ($scope, $http) {
 
     $(document).on("click", "#tbodyTrajes .btn-eliminar", function(){
         const id = $(this).data("id");
-        if(confirm("¿Deseas eliminar este cliente?")) {
+        if(confirm("¿Deseas eliminar este traje?")) {
             $.post("/trajes/eliminar", {id: id}, function(response){
                 console.log("Traje eliminado correctamente");
-                buscarTrajes(); 
+                $("#tbodyTrajes").load("/tbodyTrajes") 
             }).fail(function(xhr){
                 console.error("Error al eliminar cliente:", xhr.responseText);
             });
@@ -157,6 +157,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
