@@ -4,22 +4,16 @@
 # py -m ensurepip --upgrade
 # pip install -r requirements.txt
 
-from flask import Flask
-
-from flask import render_template
-from flask import request
-from flask import jsonify, make_response
-
+from flask import Flask, render_template, request, jsonify, make_response
 import mysql.connector
-
-import datetime
-import pytz
-
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 CORS(app)
 
+# -----------------------------
+#   FUNCIÓN DE CONEXIÓN
+# -----------------------------
 def get_connection():
     return mysql.connector.connect(
         host="185.232.14.52",
@@ -28,6 +22,9 @@ def get_connection():
         password="~6ru!MMJZzX"
     )
 
+# -----------------------------
+#   PUSHER (opcional)
+# -----------------------------
 def pusherProductos():
     import pusher
     
@@ -42,6 +39,9 @@ def pusherProductos():
     pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
     return make_response(jsonify({}))
 
+# -----------------------------
+#   RUTAS GENERALES
+# -----------------------------
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -49,11 +49,8 @@ def index():
 @app.route("/app")
 def app2():
     return render_template("login.html")
-    # return "<h5>Hola, soy la view app</h5>"
 
 @app.route("/iniciarSesion", methods=["POST"])
-# Usar cuando solo se quiera usar CORS en rutas específicas
-# @cross_origin()
 def iniciarSesion():
     con = get_connection()
 
@@ -64,27 +61,25 @@ def iniciarSesion():
     sql    = """
     SELECT Id_Usuario
     FROM usuarios
-
     WHERE Nombre_Usuario = %s
     AND Contrasena = %s
     """
-    val    = (usuario, contrasena)
-
-    cursor.execute(sql, val)
+    cursor.execute(sql, (usuario, contrasena))
     registros = cursor.fetchall()
     con.close()
 
     return make_response(jsonify(registros))
 
+# -----------------------------
+#   RUTAS TRAJES
+# -----------------------------
 @app.route("/trajes")
 def trajes():
     try:
         return render_template("trajes.html")
     except Exception as e:
         return f"Error: {e}"
-    
-# Usar cuando solo se quiera usar CORS en rutas específicas
-# @cross_origin()
+
 @app.route("/trajes/guardar", methods=["POST"])
 def guardarTraje():
     con = get_connection()
@@ -97,9 +92,7 @@ def guardarTraje():
     INSERT INTO trajes (nombreTraje, descripcion)
     VALUES (%s, %s)
     """
-    val = (nombre, descripcion)
-
-    cursor.execute(sql, val)
+    cursor.execute(sql, (nombre, descripcion))
     con.commit()
     con.close()
 
@@ -108,7 +101,6 @@ def guardarTraje():
 @app.route("/trajes/lista", methods=["GET"])
 def listarTrajes():
     con = get_connection()
-        
     cursor = con.cursor(dictionary=True)
     cursor.execute("""
         SELECT IdTraje, nombreTraje, descripcion
@@ -121,11 +113,8 @@ def listarTrajes():
     return make_response(jsonify(registros))
 
 
-
-
-
-
-
-
-
-
+# -----------------------------
+#   MAIN
+# -----------------------------
+if __name__ == "__main__":
+    app.run(debug=True)
