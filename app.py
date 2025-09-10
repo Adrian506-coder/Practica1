@@ -171,8 +171,9 @@ def guardarTraje():
     if not con.is_connected():
         con.reconnect()
 
-    nombre = request.form["txtNombre"]
-    descripcion = request.form["txtDescripcion"]
+    data = request.get_json()
+    nombre = data["txtNombre"]
+    descripcion = data["txtDescripcion"]
 
     cursor = con.cursor()
     sql = """
@@ -201,6 +202,7 @@ def guardarTraje():
 
 #if __name__ == "__main__":
 #    app.run(debug=True)
+
 
 
 
