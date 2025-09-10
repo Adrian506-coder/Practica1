@@ -117,15 +117,21 @@ def tbodyTrajes():
 
     return render_template("tbodyTrajes.html", trajes=registros)
 
-@app.route("/trajes/guardar", methods=["POST"])
+@app.route("/trajes/guardar", methods=["POST", "GET"])
 def guardarTraje():
     if not con.is_connected():
         con.reconnect()
 
-    data = request.get_json()
-    nombre = data["txtNombre"]
-    descripcion = data["txtDescripcion"]
-
+    if request.method == "POST":
+        data = request.get_json() or request.form
+        nombre = data.get("txtNombre")
+        descripcion = data.get("txtDescripcion")
+    else: 
+        nombre = request.args.get("nombre")
+        descripcion = request.args.get("descripcion")
+    if not nombre or not descripcion:
+        return jsonify({"error": "Faltan parámetros"}), 400
+        
     cursor = con.cursor()
     sql = """
     INSERT INTO trajes (nombreTraje, descripcion)
@@ -155,6 +161,7 @@ def eliminartraje():
     pusherProductos()
 
     return make_response(jsonify({"status": "ok"}))
+
 
 
 
