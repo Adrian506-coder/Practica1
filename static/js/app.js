@@ -104,7 +104,7 @@ app.controller("trajesCtrl", function ($scope, $http) {
     })
 
     $scope.guardarTraje = function() {
-        $http.post("/traje/guardar", {
+        $http.post("/trajes/guardar", {
             nombre: $scope.txtNombre,
             descripcion: $scope.txtDescripcion
         }).then(function(respuesta) {
@@ -185,6 +185,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
