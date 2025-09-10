@@ -143,7 +143,7 @@ def guardarTraje():
 
     return make_response(jsonify({"mensaje": "Traje guardado correctamente"}))
 
-@app.route("/trajes/eliminar", methods=["POST"])
+@app.route("/trajes/eliminar", methods=["POST", "GET"])
 def eliminartraje():
     if not con.is_connected():
         con.reconnect()
@@ -168,4 +168,5 @@ def eliminartraje():
 
 if __name__ == "__main__":
     app.run(port=5001, debug=True)
+
 
