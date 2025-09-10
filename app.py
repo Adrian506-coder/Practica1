@@ -117,55 +117,6 @@ def tbodyTrajes():
 
     return render_template("tbodyTrajes.html", trajes=registros)
 
-@app.route("/api/trajes/buscar", methods=["GET"])
-def buscarTrajes():
-    if not con.is_connected():
-        con.reconnect()
-
-    args     = request.args
-    busqueda = args["busqueda"]
-    busqueda = f"%{busqueda}%"
-    
-    cursor = con.cursor(dictionary=True)
-    sql    = """
-    SELECT IdTraje,
-           nombreTraje,
-           descripcion
-
-    FROM trajes
-
-    WHERE nombreTraje LIKE %s
-    OR    descripcion          LIKE %s
-
-    ORDER BY IdTraje DESC
-
-    LIMIT 10 OFFSET 0
-    """
-    val    = (busqueda, busqueda)
-
-    try:
-        cursor.execute(sql, val)
-        registros = cursor.fetchall()
-
-        # Si manejas fechas y horas
-        """
-        for registro in registros:
-            fecha_hora = registro["Fecha_Hora"]
-
-            registro["Fecha_Hora"] = fecha_hora.strftime("%Y-%m-%d %H:%M:%S")
-            registro["Fecha"]      = fecha_hora.strftime("%d/%m/%Y")
-            registro["Hora"]       = fecha_hora.strftime("%H:%M:%S")
-        """
-
-    except mysql.connector.errors.ProgrammingError as error:
-        print(f"Ocurrió un error de programación en MySQL: {error}")
-        registros = []
-
-    finally:
-        con.close()
-
-    return make_response(jsonify(registros))
-
 @app.route("/trajes/guardar", methods=["POST"])
 def guardarTraje():
     if not con.is_connected():
@@ -204,6 +155,7 @@ def eliminartraje():
     pusherProductos()
 
     return make_response(jsonify({"status": "ok"}))
+
 
 
 
