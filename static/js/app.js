@@ -84,6 +84,7 @@ app.controller("trajesCtrl", function ($scope, $http) {
     function listarTrajes() {
         $http.get("/trajes/lista").then(function(response) {
             $scope.trajes = response.data || [];
+            console.log($scope.trajes);
         }, function(error) {
             console.error(error);
         });
@@ -186,6 +187,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
