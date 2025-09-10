@@ -129,44 +129,6 @@ app.controller("trajesCtrl", function ($scope, $http) {
     })
 })
 
-
-
-app.controller("clientesCtrl", function ($scope, $http) {
-    function buscarClientes() {
-        $.get("/tbodyClientes", function (trsHTML) {
-            $("#tbodyClientes").html(trsHTML)
-        })
-    }
-
-    buscarDecoraciones()
-    
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true
-
-    var pusher = new Pusher("e57a8ad0a9dc2e83d9a2", {
-      cluster: "us2"
-    })
-
-    var channel = pusher.subscribe("canalClientes")
-    channel.bind("eventoClientes", function(data) {
-        // alert(JSON.stringify(data))
-        buscarClientes()
-    })
-
-    $(document).on("submit", "#frmDecoracion", function (event) {
-        event.preventDefault()
-
-        $.post("/clientes", {
-            id: "",
-            nombre: $("#txtNombreCliente").val(),
-            precio: $("#txtTelefono").val(),
-            existencias: $("#CorreoElectronico").val(),
-        })
-    })
-})
-
-
-
 const DateTime = luxon.DateTime
 let lxFechaHora
 
@@ -184,6 +146,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
