@@ -86,25 +86,24 @@ def iniciarSesion():
 
     return make_response(jsonify(registros))
 
-@app.route("/productos")
+@app.route("/Trajes")
 def productos():
-    return render_template("productos.html")
+    return render_template("trajes.html")
 
-@app.route("/tbodyProductos")
+@app.route("/tbodyTrajes")
 def tbodyProductos():
     if not con.is_connected():
         con.reconnect()
 
     cursor = con.cursor(dictionary=True)
     sql    = """
-    SELECT Id_Producto,
-           Nombre_Producto,
-           Precio,
-           Existencias
+    SELECT IdTraje,
+           nombreTraje,
+           descripcion
 
-    FROM productos
+    FROM trajes
 
-    ORDER BY Id_Producto DESC
+    ORDER BY IdTraje DESC
 
     LIMIT 10 OFFSET 0
     """
@@ -122,7 +121,7 @@ def tbodyProductos():
         registro["Hora"]       = fecha_hora.strftime("%H:%M:%S")
     """
 
-    return render_template("tbodyProductos.html", productos=registros)
+    return render_template("tbodyTrajes.html", productos=registros)
 
 # Usar cuando solo se quiera usar CORS en rutas específicas
 # @cross_origin()
@@ -163,3 +162,4 @@ def listarTrajes():
     con.close()
 
     return make_response(jsonify(registros))
+
