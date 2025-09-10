@@ -88,7 +88,10 @@ def iniciarSesion():
 
 @app.route("/trajes")
 def trajes():
-    return render_template("trajes.html")
+    try:
+        return render_template("trajes.html")
+    except Exception as e:
+        return f"Error: {e}"
     
 # Usar cuando solo se quiera usar CORS en rutas específicas
 # @cross_origin()
@@ -129,6 +132,7 @@ def listarTrajes():
     con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
