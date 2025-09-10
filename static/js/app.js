@@ -83,13 +83,12 @@ app.controller("trajesCtrl", function ($scope, $http) {
     $scope.trajes = []; 
     function listarTrajes() {
         $http.get("/trajes/lista").then(function(response) {
-            $scope.trajes = response.data;
+            $scope.trajes = response.data || [];
         }, function(error) {
             console.error(error);
         });
     }
 
-    $scope.trajes = [];
     listarTrajes()
     
     // Enable pusher logging - don't include this in production
@@ -107,8 +106,8 @@ app.controller("trajesCtrl", function ($scope, $http) {
 
     $scope.guardarTraje = function() {
         $http.post("/trajes/guardar", {
-            nombre: $scope.txtNombre,
-            descripcion: $scope.txtDescripcion
+            txtNombre: $scope.txtNombre,
+            txtDescripcion: $scope.txtDescripcion
         }).then(function(respuesta) {
             alert(respuesta.data.mensaje);
             $scope.txtNombre = "";
@@ -187,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
