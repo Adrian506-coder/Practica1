@@ -17,15 +17,16 @@ import pytz
 
 from flask_cors import CORS, cross_origin
 
-con = mysql.connector.connect(
-    host="185.232.14.52",
-    database="u760464709_23005256_bd",
-    user="u760464709_23005256_usr",
-    password="~6ru!MMJZzX"
-)
-
 app = Flask(__name__)
 CORS(app)
+
+def get_connection():
+    return mysql.connector.connect(
+        host="185.232.14.52",
+        database="u760464709_23005256_bd",
+        user="u760464709_23005256_usr",
+        password="~6ru!MMJZzX"
+    )
 
 def pusherProductos():
     import pusher
@@ -52,11 +53,6 @@ def index():
 
 @app.route("/app")
 def app2():
-    if not con.is_connected():
-        con.reconnect()
-
-    con.close()
-
     return render_template("login.html")
     # return "<h5>Hola, soy la view app</h5>"
 
@@ -64,8 +60,7 @@ def app2():
 # Usar cuando solo se quiera usar CORS en rutas específicas
 # @cross_origin()
 def iniciarSesion():
-    if not con.is_connected():
-        con.reconnect()
+    con = get_connection()
 
     usuario    = request.form["txtUsuario"]
     contrasena = request.form["txtContrasena"]
@@ -97,8 +92,7 @@ def trajes():
 # @cross_origin()
 @app.route("/trajes/guardar", methods=["POST"])
 def guardarTraje():
-    if not con.is_connected():
-        con.reconnect()
+    con = get_connection()
 
     nombre = request.form["txtNombre"]
     descripcion = request.form["txtDescripcion"]
@@ -118,8 +112,7 @@ def guardarTraje():
 
 @app.route("/trajes/lista", methods=["GET"])
 def listarTrajes():
-    if not con.is_connected():
-        con.reconnect()
+    con = get_connection()
         
     cursor = con.cursor(dictionary=True)
     cursor.execute("""
@@ -131,6 +124,7 @@ def listarTrajes():
     con.close()
     
     return make_response(jsonify(registros))
+
 
 
 
