@@ -11,9 +11,6 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 CORS(app)
 
-# -----------------------------
-#   FUNCIÓN DE CONEXIÓN
-# -----------------------------
 def get_connection():
     return mysql.connector.connect(
         host="185.232.14.52",
@@ -22,9 +19,6 @@ def get_connection():
         password="~6ru!MMJZzX"
     )
 
-# -----------------------------
-#   PUSHER (opcional)
-# -----------------------------
 def pusherProductos():
     import pusher
     
@@ -39,9 +33,6 @@ def pusherProductos():
     pusher_client.trigger("canalTrajes", "eventoTrajes", {"message": "Hola Mundo!"})
     return make_response(jsonify({}))
 
-# -----------------------------
-#   RUTAS GENERALES
-# -----------------------------
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -70,9 +61,6 @@ def iniciarSesion():
 
     return make_response(jsonify(registros))
 
-# -----------------------------
-#   RUTAS TRAJES
-# -----------------------------
 @app.route("/trajes")
 def trajes():
     try:
@@ -112,10 +100,7 @@ def listarTrajes():
     
     return make_response(jsonify(registros))
 
-
-# -----------------------------
-#   MAIN
-# -----------------------------
 if __name__ == "__main__":
     app.run(debug=True)
+
 
