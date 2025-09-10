@@ -86,13 +86,13 @@ def iniciarSesion():
 
     return make_response(jsonify(registros))
 
-@app.route("/trajes/view")
+@app.route("/trajes")
 def trajes():
     return render_template("trajes.html")
     
 # Usar cuando solo se quiera usar CORS en rutas específicas
 # @cross_origin()
-@app.route("/traje/guardar", methods=["POST"])
+@app.route("/trajes/guardar", methods=["POST"])
 def guardarTraje():
     if not con.is_connected():
         con.reconnect()
@@ -129,6 +129,7 @@ def listarTrajes():
     con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
