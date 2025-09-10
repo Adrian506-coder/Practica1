@@ -86,8 +86,8 @@ def iniciarSesion():
 
     return make_response(jsonify(registros))
 
-@app.route("/Trajes")
-def productos():
+@app.route("/trajes")
+def trajes():
     return render_template("trajes.html")
 
 @app.route("/tbodyTrajes")
@@ -162,4 +162,5 @@ def listarTrajes():
     con.close()
 
     return make_response(jsonify(registros))
+
 
