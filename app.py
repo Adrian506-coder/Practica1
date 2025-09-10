@@ -68,6 +68,54 @@ def trajes():
     except Exception as e:
         return f"Error: {e}"
 
+@app.route("/api/trajes/buscar", methods=["GET"])
+def buscarTrajes():
+    con = get_connection()
+
+    args     = request.args
+    busqueda = args["busqueda"]
+    busqueda = f"%{busqueda}%"
+    
+    cursor = con.cursor(dictionary=True)
+    sql    = """
+    SELECT IdTraje,
+           nombreTraje,
+           descripcion
+
+    FROM clientes
+
+    WHERE nombreTraje LIKE %s
+    OR    descripcion          LIKE %s
+
+    ORDER BY IdTraje DESC
+
+    LIMIT 10 OFFSET 0
+    """
+    val    = (busqueda, busqueda, busqueda)
+
+    try:
+        cursor.execute(sql, val)
+        registros = cursor.fetchall()
+
+        # Si manejas fechas y horas
+        """
+        for registro in registros:
+            fecha_hora = registro["Fecha_Hora"]
+
+            registro["Fecha_Hora"] = fecha_hora.strftime("%Y-%m-%d %H:%M:%S")
+            registro["Fecha"]      = fecha_hora.strftime("%d/%m/%Y")
+            registro["Hora"]       = fecha_hora.strftime("%H:%M:%S")
+        """
+
+    except mysql.connector.errors.ProgrammingError as error:
+        print(f"Ocurrió un error de programación en MySQL: {error}")
+        registros = []
+
+    finally:
+        con.close()
+
+    return make_response(jsonify(registros))
+
 @app.route("/trajes/guardar", methods=["POST"])
 def guardarTraje():
     con = get_connection()
@@ -86,21 +134,22 @@ def guardarTraje():
 
     return make_response(jsonify({"mensaje": "Traje guardado correctamente"}))
 
-@app.route("/trajes/lista", methods=["GET"])
-def listarTrajes():
-    con = get_connection()
-    cursor = con.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT IdTraje, nombreTraje, descripcion
-        FROM trajes
-        ORDER BY IdTraje DESC
-    """)
-    registros = cursor.fetchall()
-    con.close()
+#@app.route("/trajes/lista", methods=["GET"])
+#def listarTrajes():
+#    con = get_connection()
+#    cursor = con.cursor(dictionary=True)
+#    cursor.execute("""
+#        SELECT IdTraje, nombreTraje, descripcion
+#        FROM trajes
+#        ORDER BY IdTraje DESC
+#    """)
+#    registros = cursor.fetchall()
+#    con.close()
     
-    return make_response(jsonify(registros))
+#    return make_response(jsonify(registros))
 
-if __name__ == "__main__":
-    app.run(debug=True)
+#if __name__ == "__main__":
+#    app.run(debug=True)
+
 
 
