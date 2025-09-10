@@ -93,7 +93,7 @@ app.controller("trajesCtrl", function ($scope, $http) {
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true
 
-    var pusher = new Pusher("7c6cff8082dfcc0b42a9", {
+    var pusher = new Pusher("1007852abe277cd3e121", {
       cluster: "us2"
     })
 
@@ -185,6 +185,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
