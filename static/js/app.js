@@ -120,7 +120,7 @@ app.controller("trajesCtrl", function ($scope, $http) {
         if(confirm("¿Deseas eliminar este traje?")) {
             $.post("/trajes/eliminar", {id: id}, function(response){
                 console.log("Traje eliminado correctamente");
-                $("#tbodyTrajes").load("/tbodyTrajes") 
+                 buscarTrajes()
             }).fail(function(xhr){
                 console.error("Error al eliminar cliente:", xhr.responseText);
             });
@@ -157,6 +157,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
