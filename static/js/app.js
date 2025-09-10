@@ -83,6 +83,8 @@ app.controller("trajesCtrl", function ($scope, $http) {
     function listarTrajes() {
         $http.get("/trajes/lista").then(function(response) {
             $scope.trajes = response.data;
+        }, function(error) {
+            console.error(error);
         });
     }
 
@@ -101,18 +103,19 @@ app.controller("trajesCtrl", function ($scope, $http) {
         listarTrajes()
     })
 
-    $(document).on("submit", "#frmTrajes", function (event) {
-        event.preventDefault()
-
-        $.post("/traje/guardar", {
-            nombre: $("#txtNombre").val(),
-            descripcion: $("#txtDescripcion").val()
-        }, function(respuesta) {
-            alert(respuesta.mensaje);
-            $("#frmTrajes")[0].reset();
+    $scope.guardarTraje = function() {
+        $http.post("/traje/guardar", {
+            nombre: $scope.txtNombre,
+            descripcion: $scope.txtDescripcion
+        }).then(function(respuesta) {
+            alert(respuesta.data.mensaje);
+            $scope.txtNombre = "";
+            $scope.txtDescripcion = "";
             listarTrajes();
-        }, "json");
-    })
+        }, function(error) {
+            console.error(error);
+        });
+    };
 
     $(document).on("click", ".btn-ingredientes", function (event) {
         const id = $(this).data("id")
@@ -182,6 +185,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
