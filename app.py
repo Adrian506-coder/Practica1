@@ -44,11 +44,6 @@ def pusherProductos():
 
 @app.route("/")
 def index():
-    if not con.is_connected():
-        con.reconnect()
-
-    con.close()
-
     return render_template("index.html")
 
 @app.route("/app")
@@ -124,6 +119,7 @@ def listarTrajes():
     con.close()
     
     return make_response(jsonify(registros))
+
 
 
 
