@@ -21,10 +21,6 @@ app.config(function ($routeProvider, $locationProvider) {
         templateUrl: "/trajes",
         controller: "trajesCtrl"
     })
-    .when("/clientes", {
-        templateUrl: "/clientes",
-        controller: "clientesCtrl"
-    })
     .otherwise({
         redirectTo: "/"
     })
@@ -84,13 +80,13 @@ app.controller("appCtrl", function ($scope, $http) {
     })
 })
 app.controller("trajesCtrl", function ($scope, $http) {
-    function buscarTrajes() {
-        $.get("/tbodyTrajes", function (trsHTML) {
-            $("#tbodyTrajes").html(trsHTML)
-        })
+    function listarTrajes() {
+        $http.get("/trajes/lista").then(function(response) {
+            $scope.trajes = response.data;
+        });
     }
 
-    buscarTrajes()
+    listarTrajes()
     
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true
@@ -102,17 +98,20 @@ app.controller("trajesCtrl", function ($scope, $http) {
     var channel = pusher.subscribe("canalTrajes")
     channel.bind("eventoTrajes", function(data) {
         // alert(JSON.stringify(data))
-        buscarTrajes()
+        listarTrajes()
     })
 
     $(document).on("submit", "#frmTrajes", function (event) {
         event.preventDefault()
 
-        $.post("/trajes", {
-            id: "",
+        $.post("/traje/guardar", {
             nombre: $("#txtNombre").val(),
-            descripcion: $("#txtDescripcion").val(),
-        })
+            descripcion: $("#txtDescripcion").val()
+        }, function(respuesta) {
+            alert(respuesta.mensaje);
+            $("#frmTrajes")[0].reset();
+            listarTrajes();
+        }, "json");
     })
 
     $(document).on("click", ".btn-ingredientes", function (event) {
@@ -183,5 +182,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
