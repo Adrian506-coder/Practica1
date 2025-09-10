@@ -201,26 +201,11 @@ def eliminartraje():
     con.commit()
     con.close()
 
-    pusherClientes()
+    pusherProductos()
 
     return make_response(jsonify({"status": "ok"}))
 
-#@app.route("/trajes/lista", methods=["GET"])
-#def listarTrajes():
-#    con = get_connection()
-#    cursor = con.cursor(dictionary=True)
-#    cursor.execute("""
-#        SELECT IdTraje, nombreTraje, descripcion
-#        FROM trajes
-#        ORDER BY IdTraje DESC
-#    """)
-#    registros = cursor.fetchall()
-#    con.close()
-    
-#    return make_response(jsonify(registros))
 
-#if __name__ == "__main__":
-#    app.run(debug=True)
 
 
 
