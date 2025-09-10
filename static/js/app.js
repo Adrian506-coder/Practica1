@@ -17,9 +17,9 @@ app.config(function ($routeProvider, $locationProvider) {
         templateUrl: "/app",
         controller: "appCtrl"
     })
-    .when("/Trajes", {
-        templateUrl: "/Traje",
-        controller: "productosCtrl"
+    .when("/trajes", {
+        templateUrl: "/trajes",
+        controller: "trajesCtrl"
     })
     .when("/clientes", {
         templateUrl: "/clientes",
@@ -74,7 +74,7 @@ app.controller("appCtrl", function ($scope, $http) {
         $.post("iniciarSesion", $(this).serialize(), function (respuesta) {
             if (respuesta.length) {
                 alert("Iniciaste Sesión")
-                window.location = "/#/productos"
+                window.location = "/#/trajes"
 
                 return
             }
@@ -83,14 +83,14 @@ app.controller("appCtrl", function ($scope, $http) {
         })
     })
 })
-app.controller("productosCtrl", function ($scope, $http) {
-    function buscarProductos() {
-        $.get("/tbodyProductos", function (trsHTML) {
-            $("#tbodyProductos").html(trsHTML)
+app.controller("trajesCtrl", function ($scope, $http) {
+    function buscarTrajes() {
+        $.get("/tbodyTrajes", function (trsHTML) {
+            $("#tbodyTrajes").html(trsHTML)
         })
     }
 
-    buscarProductos()
+    buscarTrajes()
     
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true
@@ -99,20 +99,19 @@ app.controller("productosCtrl", function ($scope, $http) {
       cluster: "us2"
     })
 
-    var channel = pusher.subscribe("canalProductos")
-    channel.bind("eventoProductos", function(data) {
+    var channel = pusher.subscribe("canalTrajes")
+    channel.bind("eventoTrajes", function(data) {
         // alert(JSON.stringify(data))
-        buscarProductos()
+        buscarTrajes()
     })
 
-    $(document).on("submit", "#frmProducto", function (event) {
+    $(document).on("submit", "#frmTrajes", function (event) {
         event.preventDefault()
 
-        $.post("/producto", {
+        $.post("/trajes", {
             id: "",
             nombre: $("#txtNombre").val(),
-            precio: $("#txtPrecio").val(),
-            existencias: $("#txtExistencias").val(),
+            descripcion: $("#txtDescripcion").val(),
         })
     })
 
@@ -184,4 +183,5 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
