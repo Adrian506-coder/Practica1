@@ -81,16 +81,13 @@ app.controller("appCtrl", function ($scope, $http) {
 })
 app.controller("trajesCtrl", function ($scope, $http) {
     $scope.trajes = []; 
-    function listarTrajes() {
-        $http.get("/trajes/lista").then(function(response) {
-            $scope.trajes = response.data || [];
-            console.log($scope.trajes);
-        }, function(error) {
-            console.error(error);
-        });
+    function buscarTrajes() {
+        $.get("/tbodyTrajes", function (trsHTML) {
+            $("#tbodyTrajes").html(trsHTML)
+        })
     }
 
-    listarTrajes()
+    buscarTrajes()
     
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true
@@ -102,7 +99,7 @@ app.controller("trajesCtrl", function ($scope, $http) {
     var channel = pusher.subscribe("canalTrajes")
     channel.bind("eventoTrajes", function(data) {
         // alert(JSON.stringify(data))
-        listarTrajes()
+        buscarTrajes()
     })
 
     $scope.guardarTraje = function() {
@@ -113,7 +110,7 @@ app.controller("trajesCtrl", function ($scope, $http) {
             alert(respuesta.data.mensaje);
             $scope.txtNombre = "";
             $scope.txtDescripcion = "";
-            listarTrajes();
+            buscarTrajes();
         }, function(error) {
             console.error(error);
         });
@@ -187,6 +184,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
