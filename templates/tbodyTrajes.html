@@ -1,0 +1,8 @@
+{% for traje in trajes %}
+<tr>
+    <td>{{ traje.IdTraje }}</td>
+    <td>{{ traje.nombreTraje }}</td>
+    <td>{{ traje.descripcion }}</td>
+    <td><button class="btn btn-info btn-ingredientes" data-id="{{ traje.IdTraje }}">Ver ingredientes...</button></td>
+</tr>
+{% endfor %}
