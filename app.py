@@ -186,6 +186,25 @@ def guardarTraje():
 
     return make_response(jsonify({"mensaje": "Traje guardado correctamente"}))
 
+@app.route("/trajes/eliminar", methods=["POST"])
+def eliminartraje():
+    if not con.is_connected():
+        con.reconnect()
+
+    IdTraje = request.form.get("id")
+
+    cursor = con.cursor()
+    sql = "DELETE FROM trajes WHERE IdTraje = %s"
+    val = (IdTraje,)
+
+    cursor.execute(sql, val)
+    con.commit()
+    con.close()
+
+    pusherClientes()
+
+    return make_response(jsonify({"status": "ok"}))
+
 #@app.route("/trajes/lista", methods=["GET"])
 #def listarTrajes():
 #    con = get_connection()
@@ -202,6 +221,7 @@ def guardarTraje():
 
 #if __name__ == "__main__":
 #    app.run(debug=True)
+
 
 
 
