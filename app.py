@@ -148,7 +148,10 @@ def eliminartraje():
     if not con.is_connected():
         con.reconnect()
 
-    IdTraje = request.form.get("id")
+    if request.method == "POST":
+        IdTraje = request.form.get("id")
+    else:
+        IdTraje = request.args.get("id")
 
     cursor = con.cursor()
     sql = "DELETE FROM trajes WHERE IdTraje = %s"
@@ -165,3 +168,4 @@ def eliminartraje():
 
 if __name__ == "__main__":
     app.run(port=5001, debug=True)
+
