@@ -19,9 +19,9 @@ from flask_cors import CORS, cross_origin
 
 con = mysql.connector.connect(
     host="185.232.14.52",
-    database="u760464709_16005339_bd",
-    user="u760464709_16005339_usr",
-    password="/iJRzrJBz+P1"
+    database="u760464709_23005256_bd",
+    user="u760464709_23005256_usr",
+    password="~6ru!MMJZzX"
 )
 
 app = Flask(__name__)
@@ -31,14 +31,14 @@ def pusherProductos():
     import pusher
     
     pusher_client = pusher.Pusher(
-      app_id="2046005",
-      key="e57a8ad0a9dc2e83d9a2",
-      secret="8a116dd9600a3b04a3a0",
-      cluster="us2",
+      app_id='2046097',
+      key='1007852abe277cd3e121',
+      secret='7c6cff8082dfcc0b42a9',
+      cluster='us2',
       ssl=True
     )
     
-    pusher_client.trigger("canalProductos", "eventoProductos", {"message": "Hola Mundo!"})
+    pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
     return make_response(jsonify({}))
 
 @app.route("/")
@@ -124,154 +124,42 @@ def tbodyProductos():
 
     return render_template("tbodyProductos.html", productos=registros)
 
-@app.route("/productos/ingredientes/<int:id>")
-def productosIngredientes(id):
-    if not con.is_connected():
-        con.reconnect()
-
-    cursor = con.cursor(dictionary=True)
-    sql    = """
-    SELECT productos.Nombre_Producto, ingredientes.*, productos_ingredientes.Cantidad FROM productos_ingredientes
-    INNER JOIN productos ON productos.Id_Producto = productos_ingredientes.Id_Producto
-    INNER JOIN ingredientes ON ingredientes.Id_Ingrediente = productos_ingredientes.Id_Ingrediente
-    WHERE productos_ingredientes.Id_Producto = %s
-    ORDER BY productos.Nombre_Producto
-    """
-
-    cursor.execute(sql, (id, ))
-    registros = cursor.fetchall()
-
-    return render_template("modal.html", productosIngredientes=registros)
-
-@app.route("/productos/buscar", methods=["GET"])
-def buscarProductos():
-    if not con.is_connected():
-        con.reconnect()
-
-    args     = request.args
-    busqueda = args["busqueda"]
-    busqueda = f"%{busqueda}%"
-    
-    cursor = con.cursor(dictionary=True)
-    sql    = """
-    SELECT Id_Producto,
-           Nombre_Producto,
-           Precio,
-           Existencias
-
-    FROM productos
-
-    WHERE Nombre_Producto LIKE %s
-    OR    Precio          LIKE %s
-    OR    Existencias     LIKE %s
-
-    ORDER BY Id_Producto DESC
-
-    LIMIT 10 OFFSET 0
-    """
-    val    = (busqueda, busqueda, busqueda)
-
-    try:
-        cursor.execute(sql, val)
-        registros = cursor.fetchall()
-
-        # Si manejas fechas y horas
-        """
-        for registro in registros:
-            fecha_hora = registro["Fecha_Hora"]
-
-            registro["Fecha_Hora"] = fecha_hora.strftime("%Y-%m-%d %H:%M:%S")
-            registro["Fecha"]      = fecha_hora.strftime("%d/%m/%Y")
-            registro["Hora"]       = fecha_hora.strftime("%H:%M:%S")
-        """
-
-    except mysql.connector.errors.ProgrammingError as error:
-        print(f"Ocurrió un error de programación en MySQL: {error}")
-        registros = []
-
-    finally:
-        con.close()
-
-    return make_response(jsonify(registros))
-
-@app.route("/producto", methods=["POST"])
 # Usar cuando solo se quiera usar CORS en rutas específicas
 # @cross_origin()
-def guardarProducto():
+@app.route("/traje", methods=["POST"])
+def guardarTraje():
     if not con.is_connected():
         con.reconnect()
 
-    id          = request.form["id"]
-    nombre      = request.form["nombre"]
-    precio      = request.form["precio"]
-    existencias = request.form["existencias"]
-    # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
-    
+    nombre = request.form["txtNombre"]
+    descripcion = request.form["txtDescripcion"]
+
     cursor = con.cursor()
+    sql = """
+    INSERT INTO trajes (nombreTraje, descripcion)
+    VALUES (%s, %s)
+    """
+    val = (nombre, descripcion)
 
-    if id:
-        sql = """
-        UPDATE productos
-
-        SET Nombre_Producto = %s,
-            Precio          = %s,
-            Existencias     = %s
-
-        WHERE Id_Producto = %s
-        """
-        val = (nombre, precio, existencias, id)
-    else:
-        sql = """
-        INSERT INTO productos (Nombre_Producto, Precio, Existencias)
-                    VALUES    (%s,          %s,      %s)
-        """
-        val =                 (nombre, precio, existencias)
-    
     cursor.execute(sql, val)
     con.commit()
     con.close()
 
-    pusherProductos()
-    
-    return make_response(jsonify({}))
+    return make_response(jsonify({"mensaje": "Traje guardado correctamente"}))
 
-@app.route("/producto/<int:id>")
-def editarProducto(id):
+@app.route("/trajes", methods=["GET"])
+def listarTrajes():
     if not con.is_connected():
         con.reconnect()
 
     cursor = con.cursor(dictionary=True)
-    sql    = """
-    SELECT Id_Producto, Nombre_Producto, Precio, Existencias
-
-    FROM productos
-
-    WHERE Id_Producto = %s
+    sql = """
+    SELECT Id_Traje, nombreTraje, descripcion
+    FROM trajes
+    ORDER BY IdTraje DESC
     """
-    val    = (id,)
-
-    cursor.execute(sql, val)
+    cursor.execute(sql)
     registros = cursor.fetchall()
     con.close()
 
     return make_response(jsonify(registros))
-
-@app.route("/producto/eliminar", methods=["POST"])
-def eliminarProducto():
-    if not con.is_connected():
-        con.reconnect()
-
-    id = request.form["id"]
-
-    cursor = con.cursor(dictionary=True)
-    sql    = """
-    DELETE FROM productos
-    WHERE Id_Producto = %s
-    """
-    val    = (id,)
-
-    cursor.execute(sql, val)
-    con.commit()
-    con.close()
-
-    return make_response(jsonify({}))
