@@ -115,6 +115,18 @@ app.controller("trajesCtrl", function ($scope, $http) {
         });
     };
 
+    $(document).on("click", "#tbodyTrajes .btn-eliminar", function(){
+        const id = $(this).data("id");
+        if(confirm("¿Deseas eliminar este cliente?")) {
+            $.post("/trajes/eliminar", {id: id}, function(response){
+                console.log("Traje eliminado correctamente");
+                buscarTrajes(); 
+            }).fail(function(xhr){
+                console.error("Error al eliminar cliente:", xhr.responseText);
+            });
+        }
+    });
+
     $(document).on("click", ".btn-ingredientes", function (event) {
         const id = $(this).data("id")
 
@@ -145,6 +157,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
