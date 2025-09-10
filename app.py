@@ -82,7 +82,7 @@ def buscarTrajes():
            nombreTraje,
            descripcion
 
-    FROM clientes
+    FROM trajes
 
     WHERE nombreTraje LIKE %s
     OR    descripcion          LIKE %s
@@ -150,6 +150,7 @@ def guardarTraje():
 
 #if __name__ == "__main__":
 #    app.run(debug=True)
+
 
 
 
