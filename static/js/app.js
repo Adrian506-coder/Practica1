@@ -80,7 +80,6 @@ app.controller("appCtrl", function ($scope, $http) {
     })
 })
 app.controller("trajesCtrl", function ($scope, $http) {
-    $scope.trajes = []; 
     function buscarTrajes() {
         $.get("/tbodyTrajes", function (trsHTML) {
             $("#tbodyTrajes").html(trsHTML)
@@ -146,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
 
 
 
