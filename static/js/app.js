@@ -17,21 +17,14 @@ app.config(function ($routeProvider, $locationProvider) {
         templateUrl: "/app",
         controller: "appCtrl"
     })
-    .when("/productos", {
-        templateUrl: "/productos",
+    .when("/Trajes", {
+        templateUrl: "/Traje",
         controller: "productosCtrl"
     })
-
-
-
     .when("/clientes", {
         templateUrl: "/clientes",
         controller: "clientesCtrl"
     })
-
-
-
-
     .otherwise({
         redirectTo: "/"
     })
@@ -191,3 +184,4 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     activeMenuOption(location.hash)
 })
+
