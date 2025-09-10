@@ -86,46 +86,13 @@ def iniciarSesion():
 
     return make_response(jsonify(registros))
 
-@app.route("/trajes")
+@app.route("/trajes/view")
 def trajes():
     return render_template("trajes.html")
-
-@app.route("/tbodyTrajes")
-def tbodyProductos():
-    if not con.is_connected():
-        con.reconnect()
-
-    cursor = con.cursor(dictionary=True)
-    sql    = """
-    SELECT IdTraje,
-           nombreTraje,
-           descripcion
-
-    FROM trajes
-
-    ORDER BY IdTraje DESC
-
-    LIMIT 10 OFFSET 0
-    """
-
-    cursor.execute(sql)
-    registros = cursor.fetchall()
-
-    # Si manejas fechas y horas
-    """
-    for registro in registros:
-        fecha_hora = registro["Fecha_Hora"]
-
-        registro["Fecha_Hora"] = fecha_hora.strftime("%Y-%m-%d %H:%M:%S")
-        registro["Fecha"]      = fecha_hora.strftime("%d/%m/%Y")
-        registro["Hora"]       = fecha_hora.strftime("%H:%M:%S")
-    """
-
-    return render_template("tbodyTrajes.html", productos=registros)
-
+    
 # Usar cuando solo se quiera usar CORS en rutas específicas
 # @cross_origin()
-@app.route("/traje", methods=["POST"])
+@app.route("/traje/guardar", methods=["POST"])
 def guardarTraje():
     if not con.is_connected():
         con.reconnect()
@@ -146,14 +113,14 @@ def guardarTraje():
 
     return make_response(jsonify({"mensaje": "Traje guardado correctamente"}))
 
-@app.route("/trajes", methods=["GET"])
+@app.route("/trajes/lista", methods=["GET"])
 def listarTrajes():
     if not con.is_connected():
         con.reconnect()
 
     cursor = con.cursor(dictionary=True)
     sql = """
-    SELECT Id_Traje, nombreTraje, descripcion
+    SELECT IdTraje, nombreTraje, descripcion
     FROM trajes
     ORDER BY IdTraje DESC
     """
@@ -162,5 +129,6 @@ def listarTrajes():
     con.close()
 
     return make_response(jsonify(registros))
+
 
 
