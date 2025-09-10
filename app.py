@@ -68,6 +68,38 @@ def trajes():
     except Exception as e:
         return f"Error: {e}"
 
+@app.route("/tbodyTrajes")
+def tbodyClientes():
+    con = get_connection()
+    
+    cursor = con.cursor(dictionary=True)
+    sql    = """
+    SELECT IdTraje,
+           nombreTraje,
+           descripcion
+
+    FROM trajes
+
+    ORDER BY IdTraje DESC
+
+    LIMIT 10 OFFSET 0
+    """
+
+    cursor.execute(sql)
+    registros = cursor.fetchall()
+
+    # Si manejas fechas y horas
+    """
+    for registro in registros:
+        fecha_hora = registro["Fecha_Hora"]
+
+        registro["Fecha_Hora"] = fecha_hora.strftime("%Y-%m-%d %H:%M:%S")
+        registro["Fecha"]      = fecha_hora.strftime("%d/%m/%Y")
+        registro["Hora"]       = fecha_hora.strftime("%H:%M:%S")
+    """
+
+    return render_template("tbodyTrajes.html", clientes=registros)
+
 @app.route("/api/trajes/buscar", methods=["GET"])
 def buscarTrajes():
     con = get_connection()
@@ -150,6 +182,7 @@ def guardarTraje():
 
 #if __name__ == "__main__":
 #    app.run(debug=True)
+
 
 
 
