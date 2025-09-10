@@ -85,7 +85,7 @@ def trajes():
     return render_template("trajes.html")
 
 @app.route("/tbodyTrajes")
-def tbodyClientes():
+def tbodyTrajes():
     if not con.is_connected():
         con.reconnect()
     
@@ -115,7 +115,7 @@ def tbodyClientes():
         registro["Hora"]       = fecha_hora.strftime("%H:%M:%S")
     """
 
-    return render_template("tbodyTrajes.html", clientes=registros)
+    return render_template("tbodyTrajes.html", trajes=registros)
 
 @app.route("/api/trajes/buscar", methods=["GET"])
 def buscarTrajes():
@@ -201,6 +201,7 @@ def guardarTraje():
 
 #if __name__ == "__main__":
 #    app.run(debug=True)
+
 
 
 
