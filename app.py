@@ -118,19 +118,20 @@ def guardarTraje():
 
 @app.route("/trajes/lista", methods=["GET"])
 def listarTrajes():
-    try:
-        con = get_connection()
-        cursor = con.cursor(dictionary=True)
-        cursor.execute("""
-            SELECT IdTraje, nombreTraje, descripcion
-            FROM trajes
-            ORDER BY IdTraje DESC
-        """)
-        registros = cursor.fetchall()
-        con.close()
-        return jsonify(registros)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    if not con.is_connected():
+        con.reconnect()
+        
+    cursor = con.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT IdTraje, nombreTraje, descripcion
+        FROM trajes
+        ORDER BY IdTraje DESC
+    """)
+    registros = cursor.fetchall()
+    con.close()
+    
+    return make_response(jsonify(registros))
+
 
 
 
