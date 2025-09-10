@@ -4,20 +4,28 @@
 # py -m ensurepip --upgrade
 # pip install -r requirements.txt
 
-from flask import Flask, render_template, request, jsonify, make_response
+from flask import Flask
+
+from flask import render_template
+from flask import request
+from flask import jsonify, make_response
+
 import mysql.connector
+
+import datetime
+import pytz
+
 from flask_cors import CORS, cross_origin
+
+con = mysql.connector.connect(
+    host="185.232.14.52",
+    database="u760464709_23005256_bd",
+    user="u760464709_23005256_usr",
+    password="~6ru!MMJZzX"
+)
 
 app = Flask(__name__)
 CORS(app)
-
-def get_connection():
-    return mysql.connector.connect(
-        host="185.232.14.52",
-        database="u760464709_23005256_bd",
-        user="u760464709_23005256_usr",
-        password="~6ru!MMJZzX"
-    )
 
 def pusherProductos():
     import pusher
@@ -35,15 +43,26 @@ def pusherProductos():
 
 @app.route("/")
 def index():
+    if not con.is_connected():
+        con.reconnect()
+
+    con.close()
+
     return render_template("index.html")
 
 @app.route("/app")
 def app2():
+    if not con.is_connected():
+        con.reconnect()
+
+    con.close()
+
     return render_template("login.html")
 
 @app.route("/iniciarSesion", methods=["POST"])
 def iniciarSesion():
-    con = get_connection()
+    if not con.is_connected():
+        con.reconnect()
 
     usuario    = request.form["txtUsuario"]
     contrasena = request.form["txtContrasena"]
@@ -63,14 +82,12 @@ def iniciarSesion():
 
 @app.route("/trajes")
 def trajes():
-    try:
-        return render_template("trajes.html")
-    except Exception as e:
-        return f"Error: {e}"
+    return render_template("trajes.html")
 
 @app.route("/tbodyTrajes")
 def tbodyClientes():
-    con = get_connection()
+    if not con.is_connected():
+        con.reconnect()
     
     cursor = con.cursor(dictionary=True)
     sql    = """
@@ -102,7 +119,8 @@ def tbodyClientes():
 
 @app.route("/api/trajes/buscar", methods=["GET"])
 def buscarTrajes():
-    con = get_connection()
+    if not con.is_connected():
+        con.reconnect()
 
     args     = request.args
     busqueda = args["busqueda"]
@@ -150,7 +168,8 @@ def buscarTrajes():
 
 @app.route("/trajes/guardar", methods=["POST"])
 def guardarTraje():
-    con = get_connection()
+    if not con.is_connected():
+        con.reconnect()
 
     nombre = request.form["txtNombre"]
     descripcion = request.form["txtDescripcion"]
@@ -182,6 +201,7 @@ def guardarTraje():
 
 #if __name__ == "__main__":
 #    app.run(debug=True)
+
 
 
 
